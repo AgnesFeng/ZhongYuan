@@ -1,5 +1,5 @@
-function p_sl = c_3(sample,N)
-%sample = 1500e6;N = 100000;
+function paths_OR = c_3(sample,N)
+%sample = 64*225000;N = 10000;
 dt = 1/sample; %时间采样间隔 
 P=[0 -9 -12];%每一阶的功率衰减
 K=[6 0 0];%直线标度中莱斯分布的K因子   莱斯因子
@@ -24,14 +24,21 @@ paths_c = m' * ones(1,N);%常数部分
 t_shift=floor(delay/dt);%归一化各径延时  大于1的
 %为各径的输入信号做延迟处理
 rr1 = paths_r(1,:); 
-rr2 = paths_r(2,:);
-rr2(1,t_shift(2)+1:end) = rr2(1,1:end-t_shift(2));
-rr3 = paths_r(3,:);
-rr3(1,t_shift(3)+1:end) = rr3(1,1:end-t_shift(3));
+% rr2 = paths_r(2,:);
+% rr2(1,t_shift(2)+1:end) = rr2(1,1:end-t_shift(2));
+% rr3 = paths_r(3,:);
+% rr3(1,t_shift(3)+1:end) = rr3(1,1:end-t_shift(3));
+% delay2 = dsp.Delay(t_shift(2));
+% delay3 = dsp.Delay(t_shift(3));
+% x2 = step(delay2,paths_r(2,:)');rr2 = x2';
+% x3 = step(delay3,paths_r(3,:)');rr3 = x3';
+rr2 = paths_r(2,:); 
+rr3 = paths_r(3,:); 
 %叠加
 paths_sum = rr1 + rr2 + rr3;
 doppler = ray_doppler(fd,dt,N); %25Hz,确实比0.4Hz的影响大
-paths_sum1 = paths_sum.*doppler; 
+%paths_sum1 = paths_sum.*doppler; 
+paths_sum1 = paths_sum;
 paths_OR = paths_sum1 + paths_c(1,:); %注意，若是分开的单径的，常数部分只加到第一径上面
 pp1 = abs(paths_OR); %倍数
 pp2 = 10*log10(pp1.^2); %dB
@@ -47,7 +54,7 @@ PL_d0 = 10*log10(L^2/(16*pi^2)*d0^2);  %自由路径损耗
 X = normrnd(0, 1);        %高斯随机变量
 pn = 4;                   %路径损耗指数
 d = input('请输入发送距离：'); 
-PL = PL_d0 - (10*pn*log(d/d0) + X);     %特定距离d下的路径损耗
+PL = PL_d0 - (10*pn*log(d/d0) + X);    %特定距离d下的路径损耗
 PSL = PL + pp2; %dB
 p_sl = 10.^(PSL./10);
 end
