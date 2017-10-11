@@ -17,21 +17,22 @@ m = m_sequence([0,0,0,1,1,1,0,1]); %µÃµ½Ò»¸öÖÜÆÚµÄmĞòÁĞ (¸÷¼Ä´æÆ÷µÄ³õÊ¼×´Ì¬£¬´Ó×
 N_m = length(m);%m³¤:225
 m1 =  SAM_m(m,Tm_sample,length(m)); %¸ø³ÖĞøÊ±¼ä
 m2 = 1-2*m1;  %±äË«¼«ĞÔ
-L_m = length(m2);
+L = length(m2);
 peri = 3;
 mm = repmat(m,1,peri); %3¸öÖÜÆÚµÄmĞòÁĞ£¬·½±ã×öÏà¹Ø
 mm1 = SAM_m(mm,Tm_sample,length(mm));%¶àÖÜÆÚ£¬ÓĞ³ÖĞøÊ±¼ä
 mm2 = 1-2*mm1;       %±äË«¼«ĞÔ
 
-rt1=conv(mm2(1:3*L_m),m2(end:-1:1))/(N_m*Tm_sample);%È¡ÖĞ¼äµÄÒ»²¿·Ö
-index = L_m+Tm_sample;
-% figure(1);subplot(211);plot(rt1(index:end-index));title('µ¥ÖÜÆÚmĞòÁĞµÄ×ÔÏà¹Øº¯Êıconv,×î´óÖµµÄÎ»ÖÃ²îÈı¸ö');
-% xcor = dsp.Crosscorrelator;
-% y = step(xcor,m2',m2'); 
-% figure(1);subplot(212);plot(y);title('µ¥ÖÜÆÚmĞòÁĞµÄ×ÔÏà¹Øº¯Êı£¬Ïà¹ØÆ÷£¬Ê×Î²²»Ïà½Ó');
+rt1=conv(mm2(1:3*L),m2(end:-1:1))/(N_m*Tm_sample);%È¡ÖĞ¼äµÄÒ»²¿·Ö
+figure
+index = L+Tm_sample;
+figure(1);subplot(211);plot(rt1(index:end-index));title('µ¥ÖÜÆÚmĞòÁĞµÄ×ÔÏà¹Øº¯Êıconv,×î´óÖµµÄÎ»ÖÃ²îÈı¸ö');
+xcor = dsp.Crosscorrelator;
+y = step(xcor,m2',m2'); 
+figure(1);subplot(212);plot(y);title('µ¥ÖÜÆÚmĞòÁĞµÄ×ÔÏà¹Øº¯Êı£¬Ïà¹ØÆ÷£¬Ê×Î²²»Ïà½Ó');
 %%
 %---------------------3¡¢ĞÅºÅĞòÁĞ£¬À©Æµ,¼ÓÇ°µ¼ĞòÁĞ---------------------
-Tlen = 6000; 
+Tlen = 4000; 
 v = 225000;
 Tb = 1/v; %ÂëÔª³ÖĞøÊ±¼ä  
 Tc = Tb/KP;
@@ -70,7 +71,7 @@ end
 txx = tx_re + 1i*tx_im;
 %%
 %--------------------¹ıĞÅµÀ-----------------
- ts =dt;
+ts = dt;
 % fd = 25;           %×î´ó¶àÆÕÀÕÆµÒÆ 
 % k = 6;
 % tau = [0 0.000001 0.000002];
@@ -84,7 +85,7 @@ pdb = [0,-3,-6,-9];
 chan = rayleighchan(ts,fd,tau,pdb);
 
 c_out = filter(chan,txx); 
-EbNo = 29:1:30;
+EbNo = 1:20;
 for snr = 1:length(EbNo)
    y_snr = awgn(c_out,snr,'measured');
 
@@ -109,57 +110,9 @@ for snr = 1:length(EbNo)
    Bit_error1 = length(find(receive1 ~= spreadDate_m)); 
    error_rate1(snr) = Bit_error1/len_spread; 
 
-%%
-    %------------Ïà¹Ø·å²¶»ñ
-    x2 = rx(1:length(m2));
-    xcor = dsp.Crosscorrelator;
-    y = step(xcor,x2',m2'); %computes cross-correlation of x1 and x2
-    y1 = abs(y);
-    figure(2), subplot(212);plot(y1); title('Correlated output')
-
-    y_max = max(y1);
-    id = find(y_max == y1); %ÕÒµ½×î´óÖµ´¦£¬×óÓÒ¿ª´°,¸÷1ÂëÔª£¨ÑÓÊ±ÉèÔÚ4Î¢ÃëÒÔÄÚ£©
-    L_catch = Tm_sample * KP *2;
-    tempx = ones(1,10);
-    a = 1;
-    b1 = id - L_catch/2;
-    b2 = id + L_catch/2;
-    for x =b1 : 1 : b2
-        if y1(x) >= y_max/5 && y1(x-1) < y1(x) && y1(x) > y1(x+1)
-            tempx(a) = x;
-            a = a+1;
-        end
-    end
-    tempxx = tempx;
-    for j = 1:a-1   %°Ñ×î´óÖµµÄºá×ø±êÅÅĞò£¬ÕÒ³ö×î´óµÄÈı¸öÖµµÄºá×ø±ê
-        for i = 1:a-1-j
-            if y1(tempxx(i+1)) > y1(tempxx(i))
-              temp = tempxx(i);
-              tempxx(i) = tempxx(i+1);
-              tempxx(i+1) = temp;
-            end
-        end
-    end
-%%
-    %----------------ÏàÎ»¶ÔÆë
-    delay1 = dsp.Delay(tempxx(1)-aim); %delayºÃÏñ²»¿ÉÒÔÊÇÊı×é
-    delay2 = dsp.Delay(tempxx(2)-aim);
-    delay3 = dsp.Delay(tempxx(3)-aim); %ÓĞÊ±ºòÃ»ÓĞ²¶×½µ½µÚÈı¸ö·å£¬ÒªÖØÅÜÒ»´Î
-    path(1,:) = step(delay1,rx');
-    path(2,:) = step(delay2,rx');
-    path(3,:) = step(delay3,rx');
-    A = 10.^(pdb./10);
-    merge = path(1,:) *A(1) + path(2,:) *A(2) + path(3,:) *A(3); %½«ÔöÒæ»¯³É±¶Êı
-    receive2 = sign(merge);
-    Bit_error2 = length(find(receive2 ~= spreadDate_m)); 
-    error_rate2(snr) = Bit_error2/len_spread; 
 end
-%ÏàÎ»¶ÔÆëÒªÔÙË¼¿¼
-%µş¼Óºó¹Û²ìÒ»ÏÂÏà¹Ø·å
-bef = min(tempxx(1:3))-aim;
-aa = merge(bef+1:bef+L_m);
-y = step(xcor,aa',m2'); %computes cross-correlation of x1 and x2
-y1 = abs(y);
-figure(4), subplot(212);plot(y1); title('Correlated output')
+figure
+semilogx(EbNo,error_rate1);hold on;
+
 
     

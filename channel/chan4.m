@@ -50,7 +50,7 @@ pp2 = 10*log10(pp1);
 x = 1:N;
 x1 = x/sample;
 figure
-subplot(211);plot(x1,pp2);axis([0,0.000002,-60,15]);
+plot(x1,pp2);axis([0,0.000002,-60,15]);
 xlabel('时间（s）观察频率1500MHz'),ylabel('延时后叠加后幅度dB');
 %不延时，对比用
 paths = ones(L,N);
@@ -61,7 +61,7 @@ paths = paths + paths_c;
 pp = paths(1,:) + paths(2,:) + paths(3,:) + paths(4,:); %接收端同一时刻到达的幅度，因此不加延时直接叠加 
 pp3 = abs(pp).^2;
 pp4 = 10*log10(pp3);
-subplot(212);plot(x1,pp4);axis([0,0.000002,-60,15])
+%subplot(212);plot(x1,pp4);axis([0,0.000002,-60,15])
 xlabel('时间（s）观察频率1500MHz'),ylabel('叠加后幅度dB');
 %加大尺度衰落
 f = 1900e6;

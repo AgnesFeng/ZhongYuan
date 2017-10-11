@@ -86,7 +86,7 @@ chan = ricianchan(ts,fd,k,tau,pdb); %¶à¾¶£¬ÒªÇóÃ¿Ò»¾¶¶¼ÊÇÈğÀöË¥Âä¡£ts£ºÊäÈëĞÅºÅµ
 % chan = rayleighchan(ts,fd,tau,pdb);
 
 y = filter(chan,txx); 
-EbNo = 0:1:1;
+EbNo = 0:1:15;
 for snr = 1:length(EbNo)
    y_snr = awgn(y,snr,'measured');
 
