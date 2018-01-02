@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 %-----------------------1、原始信号-----------------------------------------
-Tlen = 20000; %数据长度  编码后是三倍加9的关系
+Tlen = 1000; %数据长度  编码后是三倍加9的关系
 s_initial = randsrc( 1, Tlen );
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%编码
 % R = 1/3;              % code rate
@@ -258,9 +258,9 @@ end
 
 %-----------------------------7、画误码率-----------------------------------
 figure
-semilogy(EbN0db,Bit_Error_Rate1,'ro-');hold on; 
-semilogy(EbN0db,Bit_Error_Rate2,'bo-');hold on;
-semilogy(EbN0db,Bit_Error_Rate3,'go-');hold on;
+semilogx(EbN0db,Bit_Error_Rate1,'ro-');hold on; 
+semilogx(EbN0db,Bit_Error_Rate2,'bo-');hold on;
+semilogx(EbN0db,Bit_Error_Rate3,'go-');hold on;
 % semilogy(EbN0db,Bit_Error_Rate11,'r*-');hold on;
 % semilogy(EbN0db,Bit_Error_Rate22,'b*-');hold on;
 % semilogy(EbN0db,Bit_Error_Rate32,'g*-');hold on;

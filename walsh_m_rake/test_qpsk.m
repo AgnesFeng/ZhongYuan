@@ -33,7 +33,7 @@ txx_4 = tx_re + 1i*tx_im;
 
 x = 1;
 for snr  = 1:0.2:10
-    out_noqpsk = awgn(spread,snr,'measured');
+    out_noqpsk = awgn(spread,8,'measured');
     out = awgn(txx,snr,'measured');
     out_4 = awgn(txx_4,snr,'measured');
     
@@ -74,9 +74,9 @@ for snr  = 1:0.2:10
 end
 figure
 a = 1:x-1;
-semilogx(a,error_rate_no,'b');hold on;
-semilogx(a,error_rate,'r');hold on;
-semilogx(a,error_rate_4,'m');hold on;
+semilogy(a,error_rate_no,'b');hold on;
+semilogy(a,error_rate,'r');hold on;
+semilogy(a,error_rate_4,'m');hold on;
 
 
 

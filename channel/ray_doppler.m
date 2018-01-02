@@ -15,12 +15,11 @@ x = 0; y = 0;
 for n = 1:M
     alpha = (2*pi*n-pi+(2*pi*rand-pi))/(4*M);
     ph1 = 2*pi*rand - pi;
-    
     ph2 = 2*pi*rand - pi;
     x = randn(1, N); y = randn(1, N);
     x = x + c*cos(w*t*cos(alpha) + ph1);
     y = y + c*cos(w*t*sin(alpha) + ph2);
 end
-    r = sqrt(x.^2 + y.^2)/sqrt(2); %…√◊‘¿©¥Û¡À10±∂
+    r = sqrt(x.^2 + y.^2)/sqrt(2); 
     dopDB = 10*log10(r.^2);
 end 
